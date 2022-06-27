@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:urovo_scan_manager/urovo_scan_manager.dart';
 
@@ -31,8 +31,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _urovoScanManagerPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = (await _urovoScanManagerPlugin.getOutputMode()).toString();
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -55,7 +54,10 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text('Output mode is: $_platformVersion\n'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => initPlatformState(),
         ),
       ),
     );

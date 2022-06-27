@@ -23,11 +23,19 @@ abstract class UrovoScanManagerPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  /// Get the current scan result output mode.
+  ///
+  /// Parameters:
+  /// 0 if the barcode is sent as intent,
+  /// 1 if barcode is sent to the text box in focus. Default 1.
+  ///
+  /// P.S. Однажды этот метод присылал 16843134, после переключения режим через настройки
+  /// стал присылать 0 и 1
+  Future<int> getOutputMode() {
+    throw UnimplementedError('getOutputMode() has not been implemented.');
   }
 
-  Future<void> share(String message) {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<bool> getScannerState() {
+    throw UnimplementedError('getScannerState() has not been implemented.');
   }
 }

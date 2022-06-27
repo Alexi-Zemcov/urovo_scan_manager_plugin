@@ -10,14 +10,12 @@ class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
   final methodChannel = const MethodChannel('urovo_scan_manager');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<int> getOutputMode() async {
+    return await methodChannel.invokeMethod<int>('getOutputMode') as int;
   }
 
   @override
-  Future<void> share(String message) {
-    return methodChannel.invokeMethod<void>('share', {'message': message});
+  Future<bool> getScannerState() async {
+    return await methodChannel.invokeMethod<int>('getScannerState') as bool;
   }
 }
