@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:urovo_scan_manager/urovo_scan_manager.dart';
 
 void main() {
@@ -16,34 +13,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   final _urovoScanManagerPlugin = UrovoScanManager();
+  int? _outputMode;
+
+  bool? _scannerState;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion = (await _urovoScanManagerPlugin.getOutputMode()).toString();
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+    _getData();
   }
 
   @override
@@ -53,13 +31,41 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Output mode is: $_platformVersion\n'),
+        body: Column(
+          children: [
+            Text('Output mode: $_outputMode'),
+            Text('Scanner state: $_scannerState'),
+            TextButton(
+              onPressed: _urovoScanManagerPlugin.openScanner,
+              child: const Text("openScanner"),
+            ),
+            TextButton(
+              onPressed: _urovoScanManagerPlugin.closeScanner,
+              child: const Text("closeScanner"),
+            ),
+            TextButton(
+              onPressed: _urovoScanManagerPlugin.startListening,
+              child: const Text("Start Listening"),
+            ),
+            TextButton(
+              onPressed: _urovoScanManagerPlugin.stopListening,
+              child: const Text("Stop Listening"),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => initPlatformState(),
+          onPressed: () => _getData(),
         ),
       ),
     );
+  }
+
+  void _getData() {
+    _urovoScanManagerPlugin.getOutputMode().then(
+          (value) => setState(() => {_outputMode = value}),
+        );
+    _urovoScanManagerPlugin.getScannerState().then(
+          (value) => setState(() => {_scannerState = value}),
+        );
   }
 }

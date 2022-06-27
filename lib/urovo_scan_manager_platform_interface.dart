@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'urovo_scan_manager_method_channel.dart';
@@ -15,6 +16,9 @@ abstract class UrovoScanManagerPlatform extends PlatformInterface {
   /// Defaults to [UrovoScanManagerMethodChannel].
   static UrovoScanManagerPlatform get instance => _instance;
 
+  /// Считанный баркод
+  ValueListenable<Map<String, Object?>?> get barcode;
+
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [UrovoScanManagerPlatform] when
   /// they register themselves.
@@ -31,11 +35,30 @@ abstract class UrovoScanManagerPlatform extends PlatformInterface {
   ///
   /// P.S. Однажды этот метод присылал 16843134, после переключения режим через настройки
   /// стал присылать 0 и 1
-  Future<int> getOutputMode() {
+  Future<int?> getOutputMode() {
     throw UnimplementedError('getOutputMode() has not been implemented.');
   }
 
-  Future<bool> getScannerState() {
+  /// Get the scanner power states.
+  ///
+  /// True if the scanner power on, false if power off.
+  Future<bool?> getScannerState() {
     throw UnimplementedError('getScannerState() has not been implemented.');
+  }
+
+  Future<void> openScanner() {
+    throw UnimplementedError('openScanner() has not been implemented.');
+  }
+
+  Future<void> closeScanner() {
+    throw UnimplementedError('closeScanner() has not been implemented.');
+  }
+
+  Future<void> startListening() {
+    throw UnimplementedError('startListening() has not been implemented.');
+  }
+
+  Future<void> stopListening() {
+    throw UnimplementedError('stopListening() has not been implemented.');
   }
 }
