@@ -51,6 +51,10 @@ class _MyAppState extends State<MyApp> {
               onPressed: _urovoScanManagerPlugin.stopListening,
               child: const Text("Stop Listening"),
             ),
+            ValueListenableBuilder<String?>(
+              valueListenable: _urovoScanManagerPlugin.barcode,
+              builder: (context, value, _) => Text(((value) ?? "Not avalible").toString()),
+            ),
           ],
         ),
         floatingActionButton: FloatingActionButton(

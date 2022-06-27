@@ -5,7 +5,7 @@ import 'urovo_scan_manager_platform_interface.dart';
 
 /// An implementation of [UrovoScanManagerPlatform] that uses method channels.
 class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
-  final _barcode = ValueNotifier<Map<String, Object?>?>(null);
+  final _barcode = ValueNotifier<String?>(null);
 
   /// The method channel used to interact with the native platform.
   @visibleForTesting
@@ -15,7 +15,7 @@ class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
     methodChannel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'barcodeScanned':
-          _barcode.value = Map<String, Object?>.from(call.arguments as Map);
+          _barcode.value = call.arguments;
           break;
         default:
           throw UnimplementedError('Unimplemented method: ${call.method}');
@@ -24,7 +24,7 @@ class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
   }
 
   @override
-  ValueListenable<Map<String, Object?>?> get barcode => _barcode;
+  ValueListenable<String?> get barcode => _barcode;
 
   @override
   Future<int?> getOutputMode() async {

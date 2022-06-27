@@ -17,7 +17,7 @@ abstract class UrovoScanManagerPlatform extends PlatformInterface {
   static UrovoScanManagerPlatform get instance => _instance;
 
   /// Считанный баркод
-  ValueListenable<Map<String, Object?>?> get barcode;
+  ValueListenable<String?> get barcode;
 
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [UrovoScanManagerPlatform] when

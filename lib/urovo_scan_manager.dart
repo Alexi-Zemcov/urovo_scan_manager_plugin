@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'urovo_scan_manager_platform_interface.dart';
 
 class UrovoScanManager {
-  ValueListenable<Map<String, dynamic>?> get barcode => UrovoScanManagerPlatform.instance.barcode;
+  ValueListenable<String?> get barcode => UrovoScanManagerPlatform.instance.barcode;
 
   /// Get the current scan result output mode.
   ///

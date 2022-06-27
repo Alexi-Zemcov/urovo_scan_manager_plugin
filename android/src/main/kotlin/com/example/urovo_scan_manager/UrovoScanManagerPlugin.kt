@@ -53,8 +53,10 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
             )
 
             val result =
-                "{barcode: $barcode, barcodeString: $barcodeString, barcodeType:$barcodeType, barcodeLength: $barcodeLength}"
+                "{barcodeString: $barcodeString, barcodeType:$barcodeType, barcodeLength: $barcodeLength}"
             channel.invokeMethod("barcodeScanned", result)
+            Log.d(logTag, "barcode:$result")
+
         }
     }
 
