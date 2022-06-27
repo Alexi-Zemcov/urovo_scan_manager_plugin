@@ -15,4 +15,9 @@ class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
         await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<void> share(String message) {
+    return methodChannel.invokeMethod<void>('share', {'message': message});
+  }
 }

@@ -26,4 +26,8 @@ abstract class UrovoScanManagerPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<void> share(String message) {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }
