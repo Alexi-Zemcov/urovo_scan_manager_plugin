@@ -6,6 +6,8 @@ import 'package:urovo_scan_manager/urovo_scan_manager_platform_interface.dart';
 class UrovoScanManager {
   final _isBarcodeListening = ValueNotifier(false);
 
+  // TODO(zemcov): создай сет настроек по-умолчанию
+
   /// Вспомогательная переменная которая сообщает подписались ли мы на прослушивание [barcode].
   ///
   /// По умолчанию false. Взводится в true при вызове метода [startListening],
