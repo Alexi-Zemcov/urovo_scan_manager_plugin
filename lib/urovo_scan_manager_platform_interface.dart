@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:urovo_scan_manager/dto/barcode_dto.dart';
 
 import 'urovo_scan_manager_method_channel.dart';
 
@@ -17,7 +18,7 @@ abstract class UrovoScanManagerPlatform extends PlatformInterface {
   static UrovoScanManagerPlatform get instance => _instance;
 
   /// Считанный баркод
-  ValueListenable<String?> get barcode;
+  ValueListenable<BarcodeDTO?> get barcode;
 
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [UrovoScanManagerPlatform] when

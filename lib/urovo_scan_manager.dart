@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:urovo_scan_manager/dto/barcode_dto.dart';
 
 import 'urovo_scan_manager_platform_interface.dart';
 
 class UrovoScanManager {
-  ValueListenable<String?> get barcode => UrovoScanManagerPlatform.instance.barcode;
+  ValueListenable<BarcodeDTO?> get barcode => UrovoScanManagerPlatform.instance.barcode;
+
+  // TODO(zemcov): implement switchOutputMode(int mode)
 
   /// Get the current scan result output mode.
   ///

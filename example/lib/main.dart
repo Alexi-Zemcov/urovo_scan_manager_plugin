@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:urovo_scan_manager/dto/barcode_dto.dart';
 import 'package:urovo_scan_manager/urovo_scan_manager.dart';
 
 void main() {
@@ -35,11 +36,11 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: (CrossAxisAlignment.stretch),
           children: [
             const Spacer(),
-            ValueListenableBuilder<String?>(
+            ValueListenableBuilder<BarcodeDTO?>(
               valueListenable: _urovoScanManagerPlugin.barcode,
               builder: (context, value, _) => ListTile(
                 subtitle: Text(
-                  ((value) ?? "Not avalible").toString(),
+                  ((value?.toJson()) ?? "Not avalible").toString(),
                   textAlign: TextAlign.center,
                 ),
               ),

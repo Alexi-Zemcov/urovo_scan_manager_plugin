@@ -36,8 +36,6 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
             Log.d(logTag, "onReceive , action:$action")
 
             // Get scan results, including string and byte data etc.
-            val barcode =
-                intent.getByteArrayExtra(ScanManager.DECODE_DATA_TAG)
             val barcodeString =
                 intent.getStringExtra(ScanManager.BARCODE_STRING_TAG)
             val barcodeLength =
@@ -49,7 +47,7 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
             )
 
             val result =
-                "{\"barcode\": \"$barcode\", \"barcodeString\": \"$barcodeString\", \"barcodeType\": \"$barcodeType\", \"barcodeLength\": \"$barcodeLength\"}"
+                "{\"barcodeString\": \"$barcodeString\", \"barcodeType\": $barcodeType, \"barcodeLength\": $barcodeLength}"
             channel.invokeMethod("barcodeScanned", result)
             Log.d(logTag, "barcode:$result")
 

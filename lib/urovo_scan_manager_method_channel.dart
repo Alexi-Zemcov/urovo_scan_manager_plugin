@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:urovo_scan_manager/dto/barcode_dto.dart';
 
 import 'urovo_scan_manager_platform_interface.dart';
 
 /// An implementation of [UrovoScanManagerPlatform] that uses method channels.
 class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
-  final _barcode = ValueNotifier<String?>(null);
+  final _barcode = ValueNotifier<BarcodeDTO?>(null);
 
   /// The method channel used to interact with the native platform.
   @visibleForTesting
@@ -15,7 +18,8 @@ class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
     methodChannel.setMethodCallHandler((call) async {
       switch (call.method) {
         case 'barcodeScanned':
-          _barcode.value = call.arguments;
+          final jsonMap = jsonDecode(call.arguments);
+          _barcode.value = BarcodeDTO.fromJson(jsonMap);
           break;
         default:
           throw UnimplementedError('Unimplemented method: ${call.method}');
@@ -24,7 +28,7 @@ class UrovoScanManagerMethodChannel extends UrovoScanManagerPlatform {
   }
 
   @override
-  ValueListenable<String?> get barcode => _barcode;
+  ValueListenable<BarcodeDTO?> get barcode => _barcode;
 
   @override
   Future<int?> getOutputMode() async {
