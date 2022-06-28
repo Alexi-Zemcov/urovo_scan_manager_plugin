@@ -1,40 +1,35 @@
 package com.example.urovo_scan_manager
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.device.ScanManager
 import android.device.scanner.configuration.PropertyID
 import android.util.Log
 import androidx.annotation.NonNull
-import android.content.ContextWrapper
-
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import kotlin.coroutines.coroutineContext
+
 
 /** UrovoScanManagerPlugin */
 class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
     private val logTag: String = "DEBUG_LOG"
 
-    /// The MethodChannel that will the communication between Flutter and native Android
-    ///
-    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-    /// when the Flutter Engine is detached from the Activity
+    /** The MethodChannel that will the communication between Flutter and native Android
+
+    This local reference serves to register the plugin with the Flutter Engine and unregister it
+    when the Flutter Engine is detached from the Activity */
     private lateinit var channel: MethodChannel
 
-    /// Библиотека для взаимодействия со сканером Urovo
+    /** Библиотека для взаимодействия со сканером Urovo */
     private lateinit var scanManager: ScanManager
 
+    /**  Инициализируется в методе [onAttachedToEngine], необходим для регистрации [scanReceiver]
+    методом [registerScanReceiver] */
     private lateinit var applicationContext: Context
 
-    /// Обработчик получения баркода через интент
+    /** Обработчик получения баркода через интент */
     private val scanReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -47,13 +42,14 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
                 intent.getStringExtra(ScanManager.BARCODE_STRING_TAG)
             val barcodeLength =
                 intent.getIntExtra(ScanManager.BARCODE_LENGTH_TAG, 0)
+            /** Описание типов https://www.urovo.com/developer/android/device/scanner/configuration/Constants.Symbology.html */
             val barcodeType = intent.getByteExtra(
                 ScanManager.BARCODE_TYPE_TAG,
                 0.toByte()
             )
 
             val result =
-                "{barcodeString: $barcodeString, barcodeType:$barcodeType, barcodeLength: $barcodeLength}"
+                "{\"barcode\": \"$barcode\", \"barcodeString\": \"$barcodeString\", \"barcodeType\": \"$barcodeType\", \"barcodeLength\": \"$barcodeLength\"}"
             channel.invokeMethod("barcodeScanned", result)
             Log.d(logTag, "barcode:$result")
 
@@ -64,7 +60,7 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "urovo_scan_manager")
         channel.setMethodCallHandler(this)
         scanManager = ScanManager()
-        applicationContext = flutterPluginBinding.getApplicationContext()
+        applicationContext = flutterPluginBinding.applicationContext
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {

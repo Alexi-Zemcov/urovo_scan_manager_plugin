@@ -22,6 +22,7 @@ class BarcodeDTO {
   Map<String, dynamic> toJson() => _$BarcodeDTOToJson(this);
 }
 
+// TODO(zemcov): подумай нужно ли получать [barcode] в формате Uint8List
 // class Uint8ListConverter implements JsonConverter<Uint8List?, List<int>?> {
 //   const Uint8ListConverter();
 //

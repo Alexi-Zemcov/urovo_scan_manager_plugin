@@ -32,33 +32,60 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Column(
+          crossAxisAlignment: (CrossAxisAlignment.stretch),
           children: [
-            Text('Output mode: $_outputMode'),
-            Text('Scanner state: $_scannerState'),
-            TextButton(
-              onPressed: _urovoScanManagerPlugin.openScanner,
-              child: const Text("openScanner"),
-            ),
-            TextButton(
-              onPressed: _urovoScanManagerPlugin.closeScanner,
-              child: const Text("closeScanner"),
-            ),
-            TextButton(
-              onPressed: _urovoScanManagerPlugin.startListening,
-              child: const Text("Start Listening"),
-            ),
-            TextButton(
-              onPressed: _urovoScanManagerPlugin.stopListening,
-              child: const Text("Stop Listening"),
-            ),
+            const Spacer(),
             ValueListenableBuilder<String?>(
               valueListenable: _urovoScanManagerPlugin.barcode,
-              builder: (context, value, _) => Text(((value) ?? "Not avalible").toString()),
+              builder: (context, value, _) => ListTile(
+                subtitle: Text(
+                  ((value) ?? "Not avalible").toString(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            const Spacer(),
+            ListTile(
+              title: const Text('Output mode:'),
+              trailing: Text('$_outputMode'),
+            ),
+            ListTile(
+              title: const Text('Scanner state:'),
+              trailing: Text('$_scannerState'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    _urovoScanManagerPlugin.openScanner();
+                    _getData();
+                  },
+                  child: const Text("openScanner"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _urovoScanManagerPlugin.closeScanner();
+                    _getData();
+                  },
+                  child: const Text("closeScanner"),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: _urovoScanManagerPlugin.startListening,
+                  child: const Text("Start Barcode Listening"),
+                ),
+                TextButton(
+                  onPressed: _urovoScanManagerPlugin.stopListening,
+                  child: const Text("Stop Barcode Listening"),
+                ),
+              ],
             ),
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _getData(),
         ),
       ),
     );
