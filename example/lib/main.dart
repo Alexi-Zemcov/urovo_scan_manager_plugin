@@ -16,8 +16,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _scanManager = UrovoScanManager();
-  final _outputMode = ValueNotifier<OutoutMode?>(null);
-  final _scannerState = ValueNotifier<bool?>(null);
+  OutoutMode? _outputMode;
+  bool? _scannerState;
 
   @override
   void initState() {
@@ -63,71 +63,65 @@ class _MyAppState extends State<MyApp> {
             const Spacer(),
             ListTile(
               title: const Text('Output mode:'),
-              trailing: ValueListenableBuilder<OutoutMode?>(
-                  valueListenable: _outputMode,
-                  builder: (_, value, __) {
-                    return Text('${value?.name}');
-                  }),
+              trailing: Text('${_outputMode?.name}'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
-                  onPressed: () async {
-                    await _scanManager.switchOutputMode(OutoutMode.intent);
-                    _updateOutputMode();
-                  },
-                  child: const Text('Switch to Intent'),
+                  onPressed: !(_outputMode == OutoutMode.intent)
+                      ? null
+                      : () async {
+                          await _scanManager.switchOutputMode(OutoutMode.textBox);
+                          _updateOutputMode();
+                        },
+                  child: const Text('Switch to TextBox'),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    await _scanManager.switchOutputMode(OutoutMode.textBox);
-                    _updateOutputMode();
-                  },
-                  child: const Text('Switch to TextBox'),
+                  onPressed: (_outputMode == OutoutMode.intent)
+                      ? null
+                      : () async {
+                          await _scanManager.switchOutputMode(OutoutMode.intent);
+                          _updateOutputMode();
+                        },
+                  child: const Text('Switch to Intent'),
                 ),
               ],
             ),
             ListTile(
               title: const Text('Scanner state:'),
-              trailing: ValueListenableBuilder(
-                valueListenable: _scannerState,
-                builder: (_, scannerState, __) {
-                  return Text('$scannerState');
-                },
-              ),
+              trailing: Text('$_scannerState'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
-                  onPressed: () {
-                    _scanManager.openScanner();
-                    _updateScannerState();
-                  },
-                  child: const Text("openScanner"),
+                  onPressed: !(_scannerState ?? false)
+                      ? null
+                      : () {
+                          _scanManager.closeScanner();
+                          _updateScannerState();
+                        },
+                  child: const Text("closeScanner"),
                 ),
                 TextButton(
-                  onPressed: () {
-                    _scanManager.closeScanner();
-                    _updateScannerState();
-                  },
-                  child: const Text("closeScanner"),
+                  onPressed: (_scannerState ?? false)
+                      ? null
+                      : () {
+                          _scanManager.openScanner();
+                          _updateScannerState();
+                        },
+                  child: const Text("openScanner"),
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: _scanManager.startListening,
-                  child: const Text("Start Barcode Listening"),
-                ),
-                TextButton(
-                  onPressed: _scanManager.stopListening,
-                  child: const Text("Stop Barcode Listening"),
-                ),
-              ],
+            TextButton(
+              onPressed: _scanManager.startListening,
+              child: const Text("Start Barcode Listening"),
+            ),
+            TextButton(
+              onPressed: _scanManager.stopListening,
+              child: const Text("Stop Barcode Listening"),
             ),
           ],
         ),
@@ -142,13 +136,13 @@ class _MyAppState extends State<MyApp> {
 
   void _updateScannerState() {
     _scanManager.getScannerState().then(
-          (value) => _scannerState.value = value,
+          (value) => setState(() => _scannerState = value),
         );
   }
 
   void _updateOutputMode() {
     _scanManager.getOutputMode().then(
-          (value) => _outputMode.value = value,
+          (value) => setState(() => _outputMode = value),
         );
   }
 }
