@@ -1,19 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:urovo_scan_manager/dto/barcode_type.dart';
+import 'package:urovo_scan_manager/enums/barcode_type.dart';
 
 part 'barcode_dto.g.dart';
 
 @JsonSerializable(createToJson: false)
 class BarcodeDTO {
+  final String value;
+  final int type;
+  final int length;
+
   const BarcodeDTO({
     required this.value,
     required this.type,
     required this.length,
   });
-
-  final String value;
-  final int type;
-  final int length;
 
   /// Connect the generated [_$BarcodeDTOFromJson] function to the `fromJson`
   /// factory.

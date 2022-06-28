@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urovo_scan_manager/dto/barcode_dto.dart';
+import 'package:urovo_scan_manager/enums/output_mode.dart';
 import 'package:urovo_scan_manager/urovo_scan_manager.dart';
 
 void main() {
@@ -14,15 +15,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _urovoScanManagerPlugin = UrovoScanManager();
-  int? _outputMode;
-
-  bool? _scannerState;
+  final _scanManager = UrovoScanManager();
+  final _outputMode = ValueNotifier<OutoutMode?>(null);
+  final _scannerState = ValueNotifier<bool?>(null);
 
   @override
   void initState() {
     super.initState();
-    _getData();
+    _initData();
   }
 
   @override
@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             const Spacer(),
             ValueListenableBuilder<BarcodeDTO?>(
-              valueListenable: _urovoScanManagerPlugin.barcode,
+              valueListenable: _scanManager.barcode,
               builder: (context, barcode, _) => barcode == null
                   ? const Center(
                       child: Text('Not avalible'),
@@ -63,26 +63,54 @@ class _MyAppState extends State<MyApp> {
             const Spacer(),
             ListTile(
               title: const Text('Output mode:'),
-              trailing: Text('$_outputMode'),
+              trailing: ValueListenableBuilder<OutoutMode?>(
+                  valueListenable: _outputMode,
+                  builder: (_, value, __) {
+                    return Text('${value?.name}');
+                  }),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    await _scanManager.switchOutputMode(OutoutMode.intent);
+                    _updateOutputMode();
+                  },
+                  child: const Text('Switch to Intent'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await _scanManager.switchOutputMode(OutoutMode.textBox);
+                    _updateOutputMode();
+                  },
+                  child: const Text('Switch to TextBox'),
+                ),
+              ],
             ),
             ListTile(
               title: const Text('Scanner state:'),
-              trailing: Text('$_scannerState'),
+              trailing: ValueListenableBuilder(
+                valueListenable: _scannerState,
+                builder: (_, scannerState, __) {
+                  return Text('$scannerState');
+                },
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
                   onPressed: () {
-                    _urovoScanManagerPlugin.openScanner();
-                    _getData();
+                    _scanManager.openScanner();
+                    _updateScannerState();
                   },
                   child: const Text("openScanner"),
                 ),
                 TextButton(
                   onPressed: () {
-                    _urovoScanManagerPlugin.closeScanner();
-                    _getData();
+                    _scanManager.closeScanner();
+                    _updateScannerState();
                   },
                   child: const Text("closeScanner"),
                 ),
@@ -92,11 +120,11 @@ class _MyAppState extends State<MyApp> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                  onPressed: _urovoScanManagerPlugin.startListening,
+                  onPressed: _scanManager.startListening,
                   child: const Text("Start Barcode Listening"),
                 ),
                 TextButton(
-                  onPressed: _urovoScanManagerPlugin.stopListening,
+                  onPressed: _scanManager.stopListening,
                   child: const Text("Stop Barcode Listening"),
                 ),
               ],
@@ -107,12 +135,20 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _getData() {
-    _urovoScanManagerPlugin.getOutputMode().then(
-          (value) => setState(() => {_outputMode = value}),
+  void _initData() {
+    _updateOutputMode();
+    _updateScannerState();
+  }
+
+  void _updateScannerState() {
+    _scanManager.getScannerState().then(
+          (value) => _scannerState.value = value,
         );
-    _urovoScanManagerPlugin.getScannerState().then(
-          (value) => setState(() => {_scannerState = value}),
+  }
+
+  void _updateOutputMode() {
+    _scanManager.getOutputMode().then(
+          (value) => _outputMode.value = value,
         );
   }
 }

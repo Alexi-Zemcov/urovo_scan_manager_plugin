@@ -14,7 +14,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 /** UrovoScanManagerPlugin */
 class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
-    private val logTag: String = "DEBUG_LOG"
+    private val logTag: String = "UrovoScanManagerPlugin"
 
     /** The MethodChannel that will the communication between Flutter and native Android
 
@@ -67,24 +67,12 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
             "openScanner" -> {
                 /// Turn on the power for the barcode reader.
                 val isOpened = scanManager.openScanner()
-                if (!isOpened) {
-                    result.error(
-                        "SCANNER_ERROR",
-                        "Can't turn on the power for the barcode reader",
-                        "Can't turn on the power for the barcode reader",
-                    )
-                }
+                result.success(isOpened)
             }
             "closeScanner" -> {
                 /// Turn off the power for the barcode reader.
-                val isOpened = scanManager.closeScanner()
-                if (!isOpened) {
-                    result.error(
-                        "SCANNER_ERROR",
-                        "Can't turn off the power for the barcode reader",
-                        "Can't turn off the power for the barcode reader",
-                    )
-                }
+                val isClosed = scanManager.closeScanner()
+                result.success(isClosed)
             }
             "startListening" -> {
                 registerScanReceiver(true)
@@ -93,33 +81,30 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
                 registerScanReceiver(false)
             }
             "switchOutputMode" -> {
-                /// Set the output mode of the barcode reader (either send output to text box or as Android intent).
-                ///
-                /// TextBox Mode allows the captured data to be sent to the text box in focus.
-                /// Intent mode allows the captured data to be sent as an implicit Intent.
-                /// Application interested in the scan data should register an action
-                /// as ACTION_DECODE broadcast listerner. In the onReceive method, get the information.
-                /// The information are barcode data, bardcode string, length of barcode data,
-                /// and barcode type (symbology).
-                ///
-                /// Parameters
-                /// mode - 0 if barcode output is to be sent as intent,
-                /// 1 if barcode output is to be sent to the text box in focus. The default output mode is TextBox Mode.
+                /** Set the output mode of the barcode reader (either send output to text box or as Android intent).
+                 *
+                 * TextBox Mode allows the captured data to be sent to the text box in focus.
+                 * Intent mode allows the captured data to be sent as an implicit Intent.
+                 * Application interested in the scan data should register an action
+                 * as ACTION_DECODE broadcast listerner. In the onReceive method, get the information.
+                 * The information are barcode data, bardcode string, length of barcode data,
+                 * and barcode type (symbology).
+                 *
+                 * Parameters
+                 * mode - 0 if barcode output is to be sent as intent,
+                 * 1 if barcode output is to be sent to the text box in focus. The default output mode is TextBox Mode. */
                 val isSuccess = scanManager.switchOutputMode(call.arguments as Int)
-                if (!isSuccess) {
-                    result.error(
-                        "SCANNER_ERROR",
-                        "Can't set the output mode of the barcode reader",
-                        "Can't set the output mode of the barcode reader",
-                    )
-                }
+                result.success(isSuccess)
             }
             "getOutputMode" -> {
-                /// Get the current scan result output mode.
-                ///
-                /// Parameters:
-                /// 0 if the barcode is sent as intent,
-                /// 1 if barcode is sent to the text box in focus. Default 1.
+                /** Get the current scan result output mode.
+                  *
+                  * Parameters:
+                  * 0 if the barcode is sent as intent,
+                  * 1 if barcode is sent to the text box in focus. Default 1.
+                  *
+                  * P.S. Однажды этот метод присылал 16843134, после переключения режим через настройки
+                  * стал присылать 0 и 1 */
                 val outputMode = scanManager.outputMode
                 Log.d(logTag, outputMode.toString())
                 result.success(outputMode)
