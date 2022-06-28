@@ -7,13 +7,7 @@ part of 'barcode_dto.dart';
 // **************************************************************************
 
 BarcodeDTO _$BarcodeDTOFromJson(Map<String, dynamic> json) => BarcodeDTO(
-      barcodeString: json['barcodeString'] as String,
-      barcodeType: json['barcodeType'] as int,
-      barcodeLength: json['barcodeLength'] as int,
+      value: json['value'] as String,
+      type: json['type'] as int,
+      length: json['length'] as int,
     );
-
-Map<String, dynamic> _$BarcodeDTOToJson(BarcodeDTO instance) => <String, dynamic>{
-      'barcodeString': instance.barcodeString,
-      'barcodeType': instance.barcodeType,
-      'barcodeLength': instance.barcodeLength,
-    };

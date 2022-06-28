@@ -38,12 +38,27 @@ class _MyAppState extends State<MyApp> {
             const Spacer(),
             ValueListenableBuilder<BarcodeDTO?>(
               valueListenable: _urovoScanManagerPlugin.barcode,
-              builder: (context, value, _) => ListTile(
-                subtitle: Text(
-                  ((value?.toJson()) ?? "Not avalible").toString(),
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              builder: (context, barcode, _) => barcode == null
+                  ? const Center(
+                      child: Text('Not avalible'),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Barcode: ${barcode.value}",
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          "Barcode Type: ${barcode.typeEnum.name}",
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          "Barcode Type: ${barcode.type}",
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
             ),
             const Spacer(),
             ListTile(

@@ -40,6 +40,7 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
                 intent.getStringExtra(ScanManager.BARCODE_STRING_TAG)
             val barcodeLength =
                 intent.getIntExtra(ScanManager.BARCODE_LENGTH_TAG, 0)
+
             /** Описание типов https://www.urovo.com/developer/android/device/scanner/configuration/Constants.Symbology.html */
             val barcodeType = intent.getByteExtra(
                 ScanManager.BARCODE_TYPE_TAG,
@@ -47,7 +48,7 @@ class UrovoScanManagerPlugin : FlutterPlugin, MethodCallHandler {
             )
 
             val result =
-                "{\"barcodeString\": \"$barcodeString\", \"barcodeType\": $barcodeType, \"barcodeLength\": $barcodeLength}"
+                "{\"value\": \"$barcodeString\", \"type\": $barcodeType, \"length\": $barcodeLength}"
             channel.invokeMethod("barcodeScanned", result)
             Log.d(logTag, "barcode:$result")
 

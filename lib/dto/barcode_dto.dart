@@ -1,38 +1,30 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:urovo_scan_manager/dto/barcode_type.dart';
 
 part 'barcode_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class BarcodeDTO {
   const BarcodeDTO({
-    required this.barcodeString,
-    required this.barcodeType,
-    required this.barcodeLength,
+    required this.value,
+    required this.type,
+    required this.length,
   });
 
-  final String barcodeString;
-  final int barcodeType;
-  final int barcodeLength;
+  final String value;
+  final int type;
+  final int length;
 
   /// Connect the generated [_$BarcodeDTOFromJson] function to the `fromJson`
   /// factory.
   factory BarcodeDTO.fromJson(Map<String, dynamic> json) => _$BarcodeDTOFromJson(json);
-
-  /// Connect the generated [_$BarcodeDTOToJson] function to the `toJson` method.
-  Map<String, dynamic> toJson() => _$BarcodeDTOToJson(this);
 }
 
-// TODO(zemcov): подумай нужно ли получать [barcode] в формате Uint8List
-// class Uint8ListConverter implements JsonConverter<Uint8List?, List<int>?> {
-//   const Uint8ListConverter();
-//
-//   @override
-//   Uint8List? fromJson(List<int>? json) {
-//     return json == null ? null : Uint8List.fromList(json);
-//   }
-//
-//   @override
-//   List<int>? toJson(Uint8List? object) {
-//     return object?.toList();
-//   }
-// }
+/// Добавляет [typeEnum] к [BarcodeDTO].
+///
+/// По умолчанию SDK возвращает тип баркода [type] в формате int - индекса нативного enum'а
+/// встроенного в SDK. Данное расширение добавляет в DTO параметр [typeEnum]
+/// который возвращает соответствующий enum на стороне flutter.
+extension BarcodeDTOExtension on BarcodeDTO {
+  BarcodeType get typeEnum => BarcodeType.values.firstWhere((e) => e.value == type);
+}
