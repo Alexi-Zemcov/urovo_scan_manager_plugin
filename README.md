@@ -1,6 +1,6 @@
 # urovo_scan_manager
 
-A new Flutter plugin project.
+Flutter plugin that implement [Urovo ScanManager library](https://www.urovo.com/developer/android/device/ScanManager.html).
 
 ## Getting Started
 
