@@ -1,4 +1,4 @@
-enum OutoutMode {
+enum OutputMode {
   /// Barcode output is to be sent as intent.
   intent(0),
 
@@ -6,5 +6,5 @@ enum OutoutMode {
   textBox(1);
 
   final int value;
-  const OutoutMode(this.value);
+  const OutputMode(this.value);
 }

@@ -7,7 +7,7 @@ part of 'barcode_dto.dart';
 // **************************************************************************
 
 BarcodeDTO _$BarcodeDTOFromJson(Map<String, dynamic> json) => BarcodeDTO(
-      value: json['value'] as String,
+      code: json['code'] as String,
       type: json['type'] as int,
       length: json['length'] as int,
     );

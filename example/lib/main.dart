@@ -16,7 +16,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _scanManager = UrovoScanManager();
-  OutoutMode? _outputMode;
+  OutputMode? _outputMode;
   bool? _scannerState;
 
   @override
@@ -36,29 +36,32 @@ class _MyAppState extends State<MyApp> {
           crossAxisAlignment: (CrossAxisAlignment.stretch),
           children: [
             const Spacer(),
-            ValueListenableBuilder<BarcodeDTO?>(
-              valueListenable: _scanManager.barcode,
-              builder: (context, barcode, _) => barcode == null
-                  ? const Center(
-                      child: Text('Not avalible'),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          "Barcode: ${barcode.value}",
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "Barcode Type: ${barcode.typeEnum.name}",
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "Barcode Type: ${barcode.type}",
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+            StreamBuilder<BarcodeDTO?>(
+              stream: _scanManager.barcode,
+              builder: (context, barcodeValue) {
+                final barcode = barcodeValue.data;
+                return barcode == null
+                    ? const Center(
+                        child: Text('Scan smething'),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            "Barcode: ${barcode.code}",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Barcode Type: ${barcode.typeEnum.name}",
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Barcode Type: ${barcode.type}",
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      );
+              },
             ),
             const Spacer(),
             ListTile(
@@ -69,19 +72,19 @@ class _MyAppState extends State<MyApp> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
-                  onPressed: !(_outputMode == OutoutMode.intent)
+                  onPressed: (_outputMode != OutputMode.intent)
                       ? null
                       : () async {
-                          await _scanManager.switchOutputMode(OutoutMode.textBox);
+                          await _scanManager.switchOutputMode(OutputMode.textBox);
                           _updateOutputMode();
                         },
                   child: const Text('Switch to TextBox'),
                 ),
                 TextButton(
-                  onPressed: (_outputMode == OutoutMode.intent)
+                  onPressed: (_outputMode == OutputMode.intent)
                       ? null
                       : () async {
-                          await _scanManager.switchOutputMode(OutoutMode.intent);
+                          await _scanManager.switchOutputMode(OutputMode.intent);
                           _updateOutputMode();
                         },
                   child: const Text('Switch to Intent'),

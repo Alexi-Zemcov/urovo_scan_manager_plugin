@@ -1,3 +1,3 @@
-## 0.0.1
+## Unreleased
 
-* TODO: Describe initial release.
+* feat: implement main methods of the ScanManager library

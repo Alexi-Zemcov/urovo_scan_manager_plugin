@@ -5,12 +5,12 @@ part 'barcode_dto.g.dart';
 
 @JsonSerializable(createToJson: false)
 class BarcodeDTO {
-  final String value;
+  final String code;
   final int type;
   final int length;
 
   const BarcodeDTO({
-    required this.value,
+    required this.code,
     required this.type,
     required this.length,
   });
@@ -26,5 +26,8 @@ class BarcodeDTO {
 /// встроенного в SDK. Данное расширение добавляет в DTO параметр [typeEnum]
 /// который возвращает соответствующий enum на стороне flutter.
 extension BarcodeDTOExtension on BarcodeDTO {
-  BarcodeType get typeEnum => BarcodeType.values.firstWhere((e) => e.value == type);
+  BarcodeType get typeEnum => BarcodeType.values.firstWhere(
+        (e) => e.value == type,
+        orElse: () => BarcodeType.NONE,
+      );
 }
